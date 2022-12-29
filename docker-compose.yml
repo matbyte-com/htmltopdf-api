@@ -1,0 +1,11 @@
+version: '3'
+services:
+  htmltopdf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: htmltopdf-api
+    ports:
+      - "9090:9090"
+    volumes:
+      - .:/opt/app/

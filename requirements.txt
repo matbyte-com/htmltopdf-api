@@ -1,0 +1,4 @@
+uvicorn
+fastapi~=0.88.0
+pdfkit~=1.0.0
+pydantic
