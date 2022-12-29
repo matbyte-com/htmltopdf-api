@@ -24,8 +24,9 @@ Swagger docs can be found at `/docs`. A healthcheck endpoint is available at `/h
 ```
 {
   "html": "<html><b>Test</b></html>",
-  "pdf": {
-    "grayscale": true 
+  "options": {
+    "grayscale": true,
+    ...
   }
 }
 ```
