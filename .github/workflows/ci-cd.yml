@@ -74,7 +74,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/matbyte-com/htmltopdf-api
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             # Tag with branch name
             type=ref,event=branch
@@ -84,8 +84,8 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            # Tag with SHA
-            type=sha,prefix={{branch}}-
+            # Tag with SHA (short format)
+            type=sha,format=short
             # Latest tag for main/master branch
             type=raw,value=latest,enable={{is_default_branch}}
           flavor: |
