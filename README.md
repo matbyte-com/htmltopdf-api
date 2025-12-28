@@ -61,6 +61,7 @@ pytest --cov=main --cov-report=html
 
 This project uses GitHub Actions for continuous integration and deployment:
 
+- **Python Version**: 3.13
 - **Tests**: Run automatically on every push and pull request on both AMD64 and ARM64 architectures
 - **Docker Images**: Multi-architecture images (linux/amd64, linux/arm64) built and pushed to GitHub Container Registry only after tests pass on both architectures
 - **Tagging**: Images are automatically tagged with:
