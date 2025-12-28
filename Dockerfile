@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 ARG UID=1000
 ARG GID=1000
@@ -10,6 +10,7 @@ RUN groupadd --force --gid $GID app \
     && useradd --non-unique --home-dir /opt/app --create-home --uid $UID --gid $GID --comment "Application" app
 
 # Install wkhtmltopdf and dependencies
+ARG TARGETARCH
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
@@ -18,7 +19,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     xfonts-75dpi \
     xfonts-base \
-    && wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb -O /tmp/wkhtmltox.deb \
+    && case ${TARGETARCH} in \
+         "amd64")  WKHTML_ARCH=amd64  ;; \
+         "arm64")  WKHTML_ARCH=arm64  ;; \
+         *)        echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+       esac \
+    && wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_${WKHTML_ARCH}.deb -O /tmp/wkhtmltox.deb \
     && apt-get install -y /tmp/wkhtmltox.deb \
     && rm /tmp/wkhtmltox.deb \
     && apt-get remove -y wget \

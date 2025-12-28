@@ -21,7 +21,14 @@ env:
 jobs:
   test:
     name: Run Tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            arch: amd64
+          - runner: ubuntu-24.04-arm64
+            arch: arm64
 
     steps:
       - name: Checkout code
@@ -30,7 +37,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: Install system dependencies
@@ -47,6 +54,10 @@ jobs:
         run: |
           pytest -v --tb=short
 
+      - name: Test summary
+        run: |
+          echo "✅ Tests passed on ${{ matrix.arch }}" >> $GITHUB_STEP_SUMMARY
+
   build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
@@ -59,6 +70,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -95,6 +109,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -104,6 +119,8 @@ jobs:
       - name: Generate build summary
         run: |
           echo "### Docker Image Build Summary :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Platforms:** linux/amd64, linux/arm64" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Image Tags:**" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY

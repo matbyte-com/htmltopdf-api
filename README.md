@@ -7,11 +7,17 @@ A simple FastAPI REST application to run wkhtmltopdf.
 ### Docker
 Use the provided Dockerfile or the built image at `ghcr.io/matbyte-com/htmltopdf-api`.
 
+**Supported Architectures:**
+- `linux/amd64` (x86_64)
+- `linux/arm64` (aarch64)
+
 Available tags:
 - `latest` - Latest build from the main branch
 - `a.b.c` - Semantic version tags (e.g., `1.0.0`, `1.0`, `1`)
 - `<branch>-<sha>` - Branch-specific builds with git SHA
 - `<branch>` - Latest build from a specific branch
+
+All images are multi-architecture and will automatically pull the correct version for your platform.
 
 ### Virtual Environment
 
@@ -55,10 +61,10 @@ pytest --cov=main --cov-report=html
 
 This project uses GitHub Actions for continuous integration and deployment:
 
-- **Tests**: Run automatically on every push and pull request
-- **Docker Images**: Built and pushed to GitHub Container Registry only after tests pass
+- **Tests**: Run automatically on every push and pull request on both AMD64 and ARM64 architectures
+- **Docker Images**: Multi-architecture images (linux/amd64, linux/arm64) built and pushed to GitHub Container Registry only after tests pass on both architectures
 - **Tagging**: Images are automatically tagged with:
   - Git branch name
   - Git SHA
-  - Semantic version tags
+  - Semantic version tags in format `a.b.c` (e.g., `1.0.0`, `1.0`, `1`)
   - `latest` tag for the default branch
