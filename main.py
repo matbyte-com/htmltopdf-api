@@ -11,7 +11,7 @@ app = FastAPI()
 
 class HTMLToPDFModel(BaseModel):
     html: str
-    options: Optional[dict]
+    options: Optional[dict] = None
 
 
 @app.get("/healthz")
